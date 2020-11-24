@@ -129,7 +129,7 @@ public class PullbotDriveArmNavigation extends LinearOpMode {
     // VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer
     // .Parameters();
     parameters.vuforiaLicenseKey = GenericFTCRobot.VUFORIA_KEY;
-    parameters.cameraDirection = robot.CAMERA_CHOICE;
+    parameters.cameraDirection = Pullbot.CAMERA_CHOICE;
 
     // Make sure extended tracking is disabled for this example.
     parameters.useExtendedTracking = false;
@@ -249,14 +249,14 @@ public class PullbotDriveArmNavigation extends LinearOpMode {
 
     // We need to rotate the camera around its long axis to bring the
     // correct camera forward.
-    if (robot.CAMERA_CHOICE == BACK) {
+    if (Pullbot.CAMERA_CHOICE == BACK) {
       phoneYRotate = -90;
     } else {
       phoneYRotate = 90;
     }
 
     // Rotate the phone vertical about the X axis if it's in portrait mode
-    if (robot.PHONE_IS_PORTRAIT) {
+    if (Pullbot.PHONE_IS_PORTRAIT) {
       phoneXRotate = 90;
     }
 
