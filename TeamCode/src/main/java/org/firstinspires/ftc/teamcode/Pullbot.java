@@ -101,7 +101,7 @@ import static org.firstinspires.ftc.teamcode.Pullbot.RingOrientationAnalysisPipe
 public class Pullbot extends GenericFTCRobot {
   // Vision properties
   int cameraMonitorViewId;
-  // ImageTarget trackables use mm to specify their dimensions
+  // ImageTarget trackables use mm dimensions
   public static final float mmPerInch = 25.4f;
   // Field related constants.
   // Constants for perimeter Vuforia navigation targets
