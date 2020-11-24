@@ -58,7 +58,6 @@ public class PullbotJustDrive extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-
         Pullbot robot = new Pullbot(this);
         String initReport = robot.init(hardwareMap);
         telemetry.addData("Robot status", "initialized.");

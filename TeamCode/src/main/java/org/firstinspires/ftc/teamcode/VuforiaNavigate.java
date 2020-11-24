@@ -84,9 +84,9 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
  */
 
 
-@TeleOp(name="Pullbot Navigate", group ="Concept")
+@TeleOp(name="Vuforia Navigate", group ="Nullbot")
 //@Disabled
-public class PullbotNavigate extends LinearOpMode {
+public class VuforiaNavigate extends LinearOpMode {
 
     // IMPORTANT:  For Phone Camera, set 1) the camera source and 2) the orientation, based on how your phone is mounted:
     // 1) Camera Source.  Valid choices are:  BACK (behind screen) or FRONT (selfie side)
