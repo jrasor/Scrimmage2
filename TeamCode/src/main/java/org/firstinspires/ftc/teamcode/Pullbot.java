@@ -94,6 +94,8 @@ import static org.firstinspires.ftc.teamcode.Pullbot.RingOrientationAnalysisPipe
  * v 0.21  11/3/20  Vuforia-assisted approach to Blue Tower Goal.
  * v 1.0    11/14/20 Competition ready. Let's see if inheritance from
  *          GenericFTCRobot is correctly done. 11/16 It's not.
+ * v 2.0  11/23/20 and later: Rebuilt from FtcRobotController, external
+ *        samples, and pieces of failed FtcRobotController60.
  */
 
 public class Pullbot extends GenericFTCRobot {
@@ -150,7 +152,7 @@ public class Pullbot extends GenericFTCRobot {
 
   public String init(HardwareMap someHWMap) {
     hwMap = someHWMap;
-
+    String initializationReport = "";
     // Initialize vision hardware.
     colorSensor = hwMap.get(ColorSensor.class, "colorSensor");
 
@@ -160,6 +162,7 @@ public class Pullbot extends GenericFTCRobot {
         someHWMap.appContext.getResources().getIdentifier(
             "cameraMonitorViewId", "id",
             someHWMap.appContext.getPackageName());
+    initializationReport += "Camera Id: " + cameraMonitorViewId;
     phoneCam =
         OpenCvCameraFactory.getInstance().createInternalCamera2
             (OpenCvInternalCamera2.CameraDirection.BACK, cameraMonitorViewId);
@@ -174,9 +177,10 @@ public class Pullbot extends GenericFTCRobot {
         phoneCam.setPipeline(pipeline);
       }
     });
-    currentOpMode.telemetry.addLine("Camera is set up. Pipeline");
-    String initializationReport = (pipeline == null) ? "empty.": "ready.";
-    currentOpMode.telemetry.addLine (initializationReport);
+    //currentOpMode.telemetry.addLine("Camera is set up. Pipeline");
+    initializationReport += " Camera is set up. ";
+    initializationReport += (pipeline == null) ? "empty.": "ready.";
+    //currentOpMode.telemetry.addLine (initializationReport);
 
     // Define and initialize motors. Stop them.
     leftDrive = hwMap.get(DcMotorEx.class, "motor0");

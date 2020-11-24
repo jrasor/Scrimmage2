@@ -31,9 +31,10 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 
 
 /**
@@ -49,17 +50,27 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Pullbot Just Drive", group="Pullbot")
+@TeleOp(name="Pullbot Drive Navigate", group="Pullbot")
 //@Disabled
-public class PullbotJustDrive extends LinearOpMode {
+public class PullbotDriveNavigate extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
+    Pullbot robot = new Pullbot(this);
+    private final String VUFORIA_KEY = GenericFTCRobot.VUFORIA_KEY;
+    /* Declare OpMode members. */
+
+    // Class Members
+    private OpenGLMatrix lastLocation = null;
+    private VuforiaLocalizer vuforia = null;
+    private boolean targetVisible;
+    private float phoneXRotate = 0;
+    private float phoneYRotate = 0;
+    private float phoneZRotate = 0;
 
     @Override
     public void runOpMode() {
 
-        Pullbot robot = new Pullbot(this);
         String initReport = robot.init(hardwareMap);
         telemetry.addData("Robot status", "initialized.");
         telemetry.addData("Initialization report", initReport);
