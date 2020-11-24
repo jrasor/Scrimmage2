@@ -94,10 +94,10 @@ public class RingDetectSimple extends LinearOpMode {
       // Don't burn an insane amount of CPU cycles in this sample because
       // we're not doing anything else
       sleep(20);
-      ringsDetected = robot.CountRings(); // was
+      //ringsDetected = robot.CountRings(); // was
       // using cameraMonitorViewId
-      telemetry.addData("Rings detected",  "%2d.", ringsDetected);
-      telemetry.update();
+      //telemetry.addData("Rings detected",  "%2d.", ringsDetected);
+      //telemetry.update();
 
     }
   }

@@ -201,49 +201,6 @@ public class Pullbot extends GenericFTCRobot {
    *										Vision methods
    */
 
-  int CountRings (){
-    int ringsDetected = 0;
-    init(hwMap);
-
-    sleep(20);
-    if (pipeline == null) return -2;
-    // Report detected rectangles to telemetry. There should be only 1.
-    // Todo: check this assertion.
-    ArrayList<RingOrientationAnalysisPipeline.AnalyzedRing> rings =
-        pipeline.getDetectedRings();
-    if (rings.isEmpty()) {
-      // ringsDetected will be left at zero.
-      //currentOpMode.telemetry.addLine("No rings detected.");
-    } else {
-      for (RingOrientationAnalysisPipeline.AnalyzedRing ring :
-          rings) {
-        // Current procedure: discriminate by aspect ratio.
-        // TODO: We need a better one, throwing out all ring candidates
-        //  outside a test rectangle. Henry is working on that.
-        // if ring.left < testRect.left continue
-        // if ring.top < testRect.top continue
-        // etc. Hardccode testRect left, right, top, bottom unless we're
-        // going to do something else with that rectangle, like draw it.
-        // TODO: consolidate this with discrimination code in analyzeContour.
-        currentOpMode.telemetry.addLine(String.format(Locale.US,
-            "Ring aspect ratio = %.2f.",
-            ring.aspectRatio));
-        currentOpMode.telemetry.addLine(String.format(Locale.US,
-            "Ring top = %2d  left = %2d.",
-            ring.top, ring.left));
-        currentOpMode.telemetry.addLine(String.format(Locale.US,
-            "Ring width = %2d  height=%2d.",
-            ring.width, ring.height));
-        // Discriminators here
-        if (ring.aspectRatio > 1 && ring.aspectRatio <= 2) ringsDetected = 4;
-        if (ring.aspectRatio > 2 && ring.aspectRatio <= 4) ringsDetected = 1;
-      }
-    }
-    //currentOpMode.telemetry.update();
-
-    return ringsDetected;
-  }
-
   static class RingOrientationAnalysisPipeline extends OpenCvPipeline {
 
     //   RGB colors.
