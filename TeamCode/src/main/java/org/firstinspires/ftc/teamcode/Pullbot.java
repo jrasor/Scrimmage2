@@ -326,7 +326,7 @@ public class Pullbot extends GenericFTCRobot {
       if (rotatedRectFitToContour.size.width > 50) isTrueRing = false;
       // int top = rotatedRectFitToContour.boundingRect().y;
       //int right = rotatedRectFitToContour.boundingRect().x;
-      // TODO: consolidate this with discrimination code in CountRings.
+      // TODO: consolidate this with filter code in CountRings.
       if (isTrueRing) {
         internalRingList.add(analyzedRing);
         // The angle OpenCV gives us can be ambiguous, so look at the shape of
