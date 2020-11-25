@@ -78,14 +78,16 @@ public class RingDetect extends LinearOpMode {
             "cameraMonitorViewId", "id",
             hardwareMap.appContext.getPackageName());
     robot.phoneCam =
-        OpenCvCameraFactory.getInstance().createInternalCamera2(OpenCvInternalCamera2.CameraDirection.BACK, cameraMonitorViewId);
+        OpenCvCameraFactory.getInstance().
+            createInternalCamera2(OpenCvInternalCamera2.CameraDirection.BACK,
+                cameraMonitorViewId);
 
     // Open async and start streaming inside opened callback
     robot.phoneCam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
       @Override
       public void onOpened() {
-        robot.phoneCam.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_LEFT);
-
+        robot.phoneCam.startStreaming(320, 240,
+            OpenCvCameraRotation.SIDEWAYS_LEFT);
         robot.pipeline = new Pullbot.RingOrientationAnalysisPipeline();
         robot.phoneCam.setPipeline(robot.pipeline);
       }
@@ -101,8 +103,6 @@ public class RingDetect extends LinearOpMode {
       // we're not doing anything else
       sleep(20);
 
-      // Report detected rectangles to telemetry. There should be only 1.
-      // Todo: check this assertion.
       ArrayList<Pullbot.RingOrientationAnalysisPipeline.AnalyzedRing> rings =
           robot.pipeline.getDetectedRings();
       if (rings.isEmpty()) {
@@ -111,12 +111,15 @@ public class RingDetect extends LinearOpMode {
       } else {
         for (Pullbot.RingOrientationAnalysisPipeline.AnalyzedRing ring :
             rings) {
+          /*
           // Ring discriminators. Throw out any Ring Stack too far to right,
           // too high, too wide or too tall.
           if (ring.left > robot.tooFarRight) continue;
           if (ring.top < robot.tooHigh) continue;
           if (ring.width > robot.tooWide) continue;
           if (ring.height > robot.tooTall ) continue;
+
+           */
           telemetry.addLine(String.format(Locale.US,
               "Ring aspect ratio = %.2f.",
               ring.aspectRatio));

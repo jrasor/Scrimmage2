@@ -321,10 +321,11 @@ public class Pullbot extends GenericFTCRobot {
       analyzedRing.top = rotatedRectFitToContour.boundingRect().y;
       analyzedRing.left = rotatedRectFitToContour.boundingRect().x;
       analyzedRing.height = rotatedRectFitToContour.boundingRect().height;
-      if (analyzedRing.top < 120) isMaybeRing = false;
-      if (analyzedRing.left > 160) isMaybeRing = false;
-      if (analyzedRing.width > 160) isMaybeRing = false;
-      if (rotatedRectFitToContour.size.width > 50) isMaybeRing = false;
+      if (analyzedRing.top < tooHigh) isMaybeRing = false;
+      if (analyzedRing.left > tooFarRight) isMaybeRing = false;
+      if (analyzedRing.width > tooWide) isMaybeRing = false;
+      if (analyzedRing.height > tooTall) isMaybeRing = false;
+      //if (rotatedRectFitToContour.size.width > tooWide) isMaybeRing = false;
       // int top = rotatedRectFitToContour.boundingRect().y;
       //int right = rotatedRectFitToContour.boundingRect().x;
       // TODO: consolidate this with filter code in CountRings.
