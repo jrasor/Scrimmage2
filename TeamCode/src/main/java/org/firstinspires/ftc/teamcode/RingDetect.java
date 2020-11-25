@@ -113,10 +113,10 @@ public class RingDetect extends LinearOpMode {
             rings) {
           // Ring discriminators. Throw out any Ring Stack too far to right,
           // too high, too wide or too tall.
-          if (ring.left > 100) continue;
-          if (ring.top < 140) continue;
-          if (ring.width > 100) continue;
-          if (ring.height > 60 ) continue;
+          if (ring.left > robot.tooFarRight) continue;
+          if (ring.top < robot.tooHigh) continue;
+          if (ring.width > robot.tooWide) continue;
+          if (ring.height > robot.tooTall ) continue;
           telemetry.addLine(String.format(Locale.US,
               "Ring aspect ratio = %.2f.",
               ring.aspectRatio));

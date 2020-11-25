@@ -99,11 +99,19 @@ import static org.firstinspires.ftc.teamcode.Pullbot.RingOrientationAnalysisPipe
  */
 
 public class Pullbot extends GenericFTCRobot {
+
   // Vision properties
+  public OpenCvInternalCamera2 phoneCam;
+  public RingOrientationAnalysisPipeline pipeline;
+  public static boolean PHONE_IS_PORTRAIT = false;
   int cameraMonitorViewId;
-  // ImageTarget trackables use mm dimensions
-  public static final float mmPerInch = 25.4f;
+  public static final int tooFarRight = 100;
+  public static final int tooHigh = 140;
+  public static final int tooWide = 70;
+  public static final int tooTall = 40;
+
   // Field related constants.
+  public static final float mmPerInch = 25.4f; // use mm dimensions
   // Constants for perimeter Vuforia navigation targets
   // Field outside: 12'. Inside: 1" shorter than that, each dimension.
   public static final float fullField = 142 * mmPerInch;
@@ -111,6 +119,7 @@ public class Pullbot extends GenericFTCRobot {
   public static final float quarterField = fullField / 4;
   // the height of the center of the target image above the floor
   public static final float mmTargetHeight = (6) * mmPerInch;
+
   /* Drive train. */
   // Drive train related constants in inches.
   // These next two are adjusted by calibration.
@@ -122,16 +131,14 @@ public class Pullbot extends GenericFTCRobot {
   static final double COUNTS_PER_INCH =
       (COUNTS_PER_MOTOR_TURN * DRIVE_GEAR_REDUCTION) /
           (DRIVE_WHEEL_DIAMETER * Math.PI);
+
   // Arm related properties
   public final double DEPLOYED = 1.0;   // arm extended in front of the Pullbot
   public final double STOWED = 0.0;     // arm retracted back over the Pullbot
   public DcMotorEx leftDrive = null;
   public DcMotorEx rightDrive = null;
   public Servo arm = null;
-  // Vision related properties
-  public OpenCvInternalCamera2 phoneCam;
-  public RingOrientationAnalysisPipeline pipeline;
-  public static boolean PHONE_IS_PORTRAIT = false;
+
   // Pullbot specific sensor members.
   public ColorSensor colorSensor;
   public static VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
