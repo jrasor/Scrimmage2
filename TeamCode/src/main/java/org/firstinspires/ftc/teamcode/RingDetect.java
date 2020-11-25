@@ -58,18 +58,9 @@ import java.util.Locale;
 public class RingDetect extends LinearOpMode {
 
   Pullbot robot = new Pullbot(this);
-  //OpenCvInternalCamera2 phoneCam = new
-  //OpenCvInternalCamera2 phoneCam;
-  //Pullbot.RingOrientationAnalysisPipeline pipeline;
 
   @Override
   public void runOpMode() {
-    /*
-     * NOTE: Many comments have been omitted from EasyOpenCV's samples for
-     * conciseness. If you're just starting out with EasyOpenCv,
-     * you should take a look at {@link InternalCamera2Example} or its
-     * webcam counterpart, {@link WebcamExample} first.
-     */
 
     int ringsDetected = 0;
     // Create camera instance
@@ -99,9 +90,6 @@ public class RingDetect extends LinearOpMode {
     waitForStart();
 
     while (opModeIsActive()) {
-      // Don't burn an insane amount of CPU cycles in this sample because
-      // we're not doing anything else
-      sleep(20);
 
       ArrayList<Pullbot.RingOrientationAnalysisPipeline.AnalyzedRing> rings =
           robot.pipeline.getDetectedRings();
@@ -111,15 +99,6 @@ public class RingDetect extends LinearOpMode {
       } else {
         for (Pullbot.RingOrientationAnalysisPipeline.AnalyzedRing ring :
             rings) {
-          /*
-          // Ring discriminators. Throw out any Ring Stack too far to right,
-          // too high, too wide or too tall.
-          if (ring.left > robot.tooFarRight) continue;
-          if (ring.top < robot.tooHigh) continue;
-          if (ring.width > robot.tooWide) continue;
-          if (ring.height > robot.tooTall ) continue;
-
-           */
           telemetry.addLine(String.format(Locale.US,
               "Ring aspect ratio = %.2f.",
               ring.aspectRatio));
@@ -136,7 +115,6 @@ public class RingDetect extends LinearOpMode {
               ringsDetected));
         }
       }
-
       telemetry.update();
     }
   }
