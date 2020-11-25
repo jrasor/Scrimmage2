@@ -41,7 +41,7 @@ import java.util.Locale;
  * o C case: taller rectangle, ratio 1-2. Go for Zone C.
  */
 
-@Autonomous(name = "Ring Detect Go Zone", group = "Competition")
+@Autonomous(name = "Ring Detect Go Zone", group = "Vision test")
 //@Disabled
 public class RingDetectGoZone extends LinearOpMode {
 
@@ -102,6 +102,6 @@ public class RingDetectGoZone extends LinearOpMode {
       }
     }
     telemetry.update();
-    sleep(10000);
+    sleep (2000);
   }
 }
