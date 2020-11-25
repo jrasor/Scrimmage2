@@ -108,7 +108,7 @@ public class Pullbot extends GenericFTCRobot {
   public static final int tooFarRight = 100;
   public static final int tooHigh = 140;
   public static final int tooWide = 70;
-  public static final int tooTall = 40;
+  public static final int tooTall = 50;
 
   // Field related constants.
   public static final float mmPerInch = 25.4f; // use mm dimensions
