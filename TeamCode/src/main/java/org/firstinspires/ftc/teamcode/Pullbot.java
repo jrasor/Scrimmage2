@@ -305,7 +305,7 @@ public class Pullbot extends GenericFTCRobot {
     }
 
     void analyzeContour(MatOfPoint contour, Mat input) {
-      boolean isTrueRing = true;
+      boolean isMaybeRing = true;
       AnalyzedRing analyzedRing = new AnalyzedRing();
       //   Transform the contour to a different format.
       Point[] points = contour.toArray();
@@ -321,13 +321,14 @@ public class Pullbot extends GenericFTCRobot {
       analyzedRing.top = rotatedRectFitToContour.boundingRect().y;
       analyzedRing.left = rotatedRectFitToContour.boundingRect().x;
       analyzedRing.height = rotatedRectFitToContour.boundingRect().height;
-      if (analyzedRing.top < 120) isTrueRing = false;
-      if (analyzedRing.left > 160) isTrueRing = false;
-      if (rotatedRectFitToContour.size.width > 50) isTrueRing = false;
+      if (analyzedRing.top < 120) isMaybeRing = false;
+      if (analyzedRing.left > 160) isMaybeRing = false;
+      if (analyzedRing.width > 160) isMaybeRing = false;
+      if (rotatedRectFitToContour.size.width > 50) isMaybeRing = false;
       // int top = rotatedRectFitToContour.boundingRect().y;
       //int right = rotatedRectFitToContour.boundingRect().x;
-      // TODO: consolidate this with discrimination code in CountRings.
-      if (isTrueRing) {
+      // TODO: consolidate this with filter code in CountRings.
+      if (isMaybeRing) {
         internalRingList.add(analyzedRing);
         // The angle OpenCV gives us can be ambiguous, so look at the shape of
         // the rectangle to fix that.
