@@ -101,6 +101,43 @@ public class RingDetectGoZone extends LinearOpMode {
             ringsDetected));
       }
     }
+
+    switch (ringsDetected) {
+      case (0): {
+        telemetry.addLine("Going to Zone A.");
+        // Henry and Orlando's code here.
+        //robot.turnAngleRadiusDrive(TURN_SPEED, 1, 80.0);
+        // no backward move to park on Launch Line needed; robot ends up
+        // there on pushing the Wobble Goal.
+        telemetry.addLine("A path Complete.");
+        telemetry.update();
+        break;
+      }
+      case (1): {
+        telemetry.addLine("Going to Zone B.");
+        // Henry and Orlando's code here.
+        //robot.turnAngleRadiusDrive(TURN_SPEED, 0.6, 150.0);
+        //robot.turnAngleRadiusDrive(TURN_SPEED, -0.07, 150.0);
+        telemetry.addLine("B path Complete.");
+        telemetry.update();
+        break;
+      }
+      case (4): {
+        telemetry.addLine("Going to Zone C.");
+        // My code here.
+        //robot.turnAngleRadiusDrive(TURN_SPEED, 0.82, 150.0);
+        // robot.turnAngleRadiusDrive(TURN_SPEED, -0.32, 150.0);
+        telemetry.addLine("C path Complete.");
+        telemetry.update();
+        break;
+      }
+      default:
+        telemetry.addLine(
+            "I'm lost. Going to Zone A, and hoping for the best.");
+        ringsDetected = 0;
+        //Todo: robot does what?
+    }
+
     telemetry.update();
     sleep (2000);
   }
