@@ -184,10 +184,8 @@ public class Pullbot extends GenericFTCRobot {
         phoneCam.setPipeline(pipeline);
       }
     });
-    //currentOpMode.telemetry.addLine("Camera is set up. Pipeline");
-    initializationReport += " Camera is set up. ";
+    initializationReport += "Camera is set up. Pipeline ";
     initializationReport += (pipeline == null) ? "empty.": "ready.";
-    //currentOpMode.telemetry.addLine (initializationReport);
 
     // Define and initialize motors. Stop them.
     leftDrive = hwMap.get(DcMotorEx.class, "motor0");

@@ -46,37 +46,21 @@ import java.util.Locale;
 public class RingDetectGoZone extends LinearOpMode {
 
   Pullbot robot = new Pullbot(this);
+  String initReport = "";
 
   @Override
   public void runOpMode() {
-
-    int ringsDetected = 0;
-    // Create camera instance
-    int cameraMonitorViewId =
-        hardwareMap.appContext.getResources().getIdentifier(
-            "cameraMonitorViewId", "id",
-            hardwareMap.appContext.getPackageName());
-    robot.phoneCam =
-        OpenCvCameraFactory.getInstance().
-            createInternalCamera2(OpenCvInternalCamera2.CameraDirection.BACK,
-                cameraMonitorViewId);
-
-    // Open async and start streaming inside opened callback
-    robot.phoneCam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
-      @Override
-      public void onOpened() {
-        robot.phoneCam.startStreaming(320, 240,
-            OpenCvCameraRotation.SIDEWAYS_LEFT);
-        robot.pipeline = new Pullbot.RingOrientationAnalysisPipeline();
-        robot.phoneCam.setPipeline(robot.pipeline);
-      }
-    });
+    initReport = robot.init(hardwareMap);
 
     // Tell telemetry to update faster than the default 250ms period :)
-    telemetry.setMsTransmissionInterval(20);
+    telemetry.setMsTransmissionInterval(100);
+    telemetry.addLine (initReport);
+    telemetry.update();
+    sleep (3000);
 
     waitForStart();
 
+    int ringsDetected = 0;
     ArrayList<Pullbot.RingOrientationAnalysisPipeline.AnalyzedRing> rings =
         robot.pipeline.getDetectedRings();
     if (rings.isEmpty()) {
@@ -140,5 +124,6 @@ public class RingDetectGoZone extends LinearOpMode {
 
     telemetry.update();
     sleep (2000);
+
   }
 }
