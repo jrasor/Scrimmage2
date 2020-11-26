@@ -47,6 +47,7 @@ public class RingDetectGoZone extends LinearOpMode {
 
   Pullbot robot = new Pullbot(this);
   String initReport = "";
+  boolean doPaths = true;
 
   @Override
   public void runOpMode() {
@@ -58,6 +59,8 @@ public class RingDetectGoZone extends LinearOpMode {
     telemetry.update();
     sleep (3000);
 
+    double straightSpeed = 0.60;
+    double turnSpeed = 0.30;
     waitForStart();
 
     int ringsDetected = 0;
@@ -90,7 +93,7 @@ public class RingDetectGoZone extends LinearOpMode {
       case (0): {
         telemetry.addLine("Going to Zone A.");
         // Henry and Orlando's code here.
-        //robot.turnAngleRadiusDrive(TURN_SPEED, 1, 80.0);
+        if (doPaths) robot.turnAngleRadiusDrive(turnSpeed, 1, 80.0);
         // no backward move to park on Launch Line needed; robot ends up
         // there on pushing the Wobble Goal.
         telemetry.addLine("A path Complete.");
@@ -100,8 +103,8 @@ public class RingDetectGoZone extends LinearOpMode {
       case (1): {
         telemetry.addLine("Going to Zone B.");
         // Henry and Orlando's code here.
-        //robot.turnAngleRadiusDrive(TURN_SPEED, 0.6, 150.0);
-        //robot.turnAngleRadiusDrive(TURN_SPEED, -0.07, 150.0);
+        if (doPaths) robot.turnAngleRadiusDrive(turnSpeed, 0.6, 150.0);
+        if (doPaths) robot.turnAngleRadiusDrive(turnSpeed, -0.07, 150.0);
         telemetry.addLine("B path Complete.");
         telemetry.update();
         break;
@@ -109,8 +112,8 @@ public class RingDetectGoZone extends LinearOpMode {
       case (4): {
         telemetry.addLine("Going to Zone C.");
         // My code here.
-        //robot.turnAngleRadiusDrive(TURN_SPEED, 0.82, 150.0);
-        // robot.turnAngleRadiusDrive(TURN_SPEED, -0.32, 150.0);
+        if (doPaths) robot.turnAngleRadiusDrive(turnSpeed, 0.82, 150.0);
+        if (doPaths) robot.turnAngleRadiusDrive(turnSpeed, -0.32, 150.0);
         telemetry.addLine("C path Complete.");
         telemetry.update();
         break;
@@ -119,7 +122,7 @@ public class RingDetectGoZone extends LinearOpMode {
         telemetry.addLine(
             "I'm lost. Going to Zone A, and hoping for the best.");
         ringsDetected = 0;
-        //Todo: robot does what?
+        if (doPaths) robot.turnAngleRadiusDrive(turnSpeed, 1, 80.0);
     }
 
     telemetry.update();
