@@ -534,10 +534,11 @@ public class Pullbot extends GenericFTCRobot {
     //  One stick for fore-and-aft, one for turns.
     double drive = currentOpMode.gamepad1.left_stick_y;
     double turn  =  -currentOpMode.gamepad1.right_stick_x;
-    drive    = Range.clip(drive + turn, -1.0, 1.0) ;
-    turn   = Range.clip(drive - turn, -1.0, 1.0) ;
-    leftDrive.setPower(drive);
-    rightDrive.setPower(turn);
+
+    //drive    = Range.clip(drive + turn, -1.0, 1.0) ;
+    //turn   = Range.clip(drive - turn, -1.0, 1.0) ;
+    leftDrive.setPower(drive - turn);
+    rightDrive.setPower(drive + turn);
   }
 
   // Macros can go here. Most will go into the opmodes.
