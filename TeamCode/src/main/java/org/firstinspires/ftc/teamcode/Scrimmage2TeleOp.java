@@ -84,9 +84,9 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
  */
 
 
-@TeleOp(name="Pullbot Drive and Navigate", group ="Pullbot")
+@TeleOp(name="Scrimmage 2 Teleop", group ="Pullbot")
 //@Disabled
-public class PullbotDriveNavigate extends LinearOpMode {
+public class Scrimmage2TeleOp extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
 

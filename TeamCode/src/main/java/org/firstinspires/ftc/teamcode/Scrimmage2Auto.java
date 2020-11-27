@@ -43,7 +43,7 @@ import java.util.Locale;
 
 @Autonomous(name = "Ring Detect Go Zone", group = "Vision test")
 //@Disabled
-public class RingDetectGoZone extends LinearOpMode {
+public class Scrimmage2Auto extends LinearOpMode {
 
   Pullbot robot = new Pullbot(this);
   String initReport = "";
