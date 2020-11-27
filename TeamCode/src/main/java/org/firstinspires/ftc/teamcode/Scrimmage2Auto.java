@@ -41,13 +41,29 @@ import java.util.Locale;
  * o C case: taller rectangle, ratio 1-2. Go for Zone C.
  */
 
-@Autonomous(name = "Ring Detect Go Zone", group = "Vision test")
+@Autonomous(name = "Scrimmage2 Auto", group = "Vision test")
 //@Disabled
 public class Scrimmage2Auto extends LinearOpMode {
 
   Pullbot robot = new Pullbot(this);
   String initReport = "";
+  double straightSpeed = 0.60;
+  double turnSpeed = 0.30;
   boolean doPaths = true;
+
+  private void doPathA (){
+    robot.turnArcRadiusDrive (turnSpeed, 84.0, 80.0);
+  }
+
+  private void doPathB (){
+    robot.turnArcRadiusDrive (turnSpeed, 96.0, 240.0);
+    robot.turnArcRadiusDrive (turnSpeed, -20.0, 240.0);
+  }
+
+  private void doPathC (){
+    robot.turnArcRadiusDrive (turnSpeed, 123.0, 157.0);
+    robot.turnArcRadiusDrive (turnSpeed, -46.0, 157.0);
+  }
 
   @Override
   public void runOpMode() {
@@ -59,8 +75,7 @@ public class Scrimmage2Auto extends LinearOpMode {
     telemetry.update();
     sleep (3000);
 
-    double straightSpeed = 0.60;
-    double turnSpeed = 0.30;
+
     waitForStart();
 
     int ringsDetected = 0;
@@ -97,7 +112,8 @@ public class Scrimmage2Auto extends LinearOpMode {
         // Henry and Orlando's code here.
         //if (doPaths) robot.turnAngleRadiusDrive(turnSpeed, 1, 80.0);
         // Mine, translated to turnArcRadius from theirs:
-        if (doPaths) robot.turnArcRadiusDrive (turnSpeed, 84.0, 80.0);
+        //if (doPaths) robot.turnArcRadiusDrive (turnSpeed, 84.0, 80.0);
+        if (doPaths) doPathA();
         // no backward move to park on Launch Line needed; robot ends up
         // there on pushing the Wobble Goal.
         telemetry.addLine("A path Complete.");
@@ -111,8 +127,9 @@ public class Scrimmage2Auto extends LinearOpMode {
         //if (doPaths) robot.turnAngleRadiusDrive(turnSpeed, 0.6, 150.0);
         //if (doPaths) robot.turnAngleRadiusDrive(turnSpeed, -0.07, 150.0);
         // Mine, translated to turnArcRadius from theirs:
-        if (doPaths) robot.turnArcRadiusDrive (turnSpeed, 96.0, 240.0);
-        if (doPaths) robot.turnArcRadiusDrive (turnSpeed, -20.0, 240.0);
+        //if (doPaths) robot.turnArcRadiusDrive (turnSpeed, 96.0, 240.0);
+        //if (doPaths) robot.turnArcRadiusDrive (turnSpeed, -20.0, 240.0);
+        if (doPaths) doPathB();
         telemetry.addLine("B path Complete.");
         telemetry.update();
         break;
@@ -124,8 +141,9 @@ public class Scrimmage2Auto extends LinearOpMode {
         //if (doPaths) robot.turnAngleRadiusDrive(turnSpeed, 0.82, 150.0);
         //if (doPaths) robot.turnAngleRadiusDrive(turnSpeed, -0.32, 150.0);
         // Mine, translated to turnArcRadius from theirs:
-        if (doPaths) robot.turnArcRadiusDrive (turnSpeed, 123.0, 150.0);
-        if (doPaths) robot.turnArcRadiusDrive (turnSpeed, -46.0, 150.0);
+        //if (doPaths) robot.turnArcRadiusDrive (turnSpeed, 123.0, 143.0);
+        //if (doPaths) robot.turnArcRadiusDrive (turnSpeed, -46.0, 143.0);
+        if (doPaths) doPathC();
         telemetry.addLine("C path Complete.");
         telemetry.update();
         break;
@@ -134,7 +152,8 @@ public class Scrimmage2Auto extends LinearOpMode {
         telemetry.addLine(
             "I'm lost. Going to Zone A, and hoping for the best.");
         ringsDetected = 0;
-        if (doPaths) robot.turnArcRadiusDrive(turnSpeed, 84.0, 80.0);
+        if (doPaths) doPathA();
+        telemetry.update();
     }
 
     telemetry.update();
