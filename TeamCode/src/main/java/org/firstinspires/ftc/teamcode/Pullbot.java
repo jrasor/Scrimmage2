@@ -359,9 +359,15 @@ public class Pullbot extends GenericFTCRobot {
   /*
    *										Drive Train methods
    */
+  private double NUDGE_SPEED = 0.30;
+  private double NUDGE_INCHES = 1.0;
 
   /*                      Primitive layer.                    */
   // Task layer methods are built up out of members at this layer.
+  private double temperedControl (double input) {
+    return Math.pow(input, 3.0);
+  }
+
   public void setDriveRunMode(DcMotor.RunMode someRunMode) {
     leftDrive.setMode(someRunMode);
     rightDrive.setMode(someRunMode);
@@ -467,12 +473,12 @@ public class Pullbot extends GenericFTCRobot {
     // negative angle and negative radius do?
     double leftRadius = radius - DRIVE_WHEEL_SEPARATION / 2.0;
     double rightRadius = radius + DRIVE_WHEEL_SEPARATION / 2.0;
-    double cfLeft = leftRadius / radius;
-    double cfRight = rightRadius / radius;
+    double turnAdjustLeft = leftRadius / radius;
+    double turnAdjustRight = rightRadius / radius;
     double leftArc = leftRadius * angle;
     double rightArc = rightRadius * angle;
-    double leftSpeed = speed * cfLeft;
-    double rightSpeed = speed * cfRight;
+    double leftSpeed = speed * turnAdjustLeft;
+    double rightSpeed = speed * turnAdjustRight;
 
     encoderDrive(leftSpeed, rightSpeed, leftArc, rightArc);
     // clean up
@@ -522,6 +528,21 @@ public class Pullbot extends GenericFTCRobot {
 
   /*                      Command layer.                    */
   //Human driver issues commands with gamepad.
+  public void enableNudge () {
+    if (currentOpMode.gamepad1.left_trigger > 0){
+      // nudge left wheel forward a little
+    }
+    if (currentOpMode.gamepad1.right_trigger > 0){
+      // nudge right wheel forward a little
+    }
+    if (currentOpMode.gamepad1.left_bumper){
+      // nudge left wheel back a little
+    }
+    if (currentOpMode.gamepad1.left_bumper){
+      // nudge right wheel back a little
+    }
+  }
+
   public void tankDrive() {
     //  Tank drive with the two sticks.
     double leftSpeed = currentOpMode.gamepad1.left_stick_y;
@@ -541,7 +562,7 @@ public class Pullbot extends GenericFTCRobot {
     rightDrive.setPower(drive + turn);
   }
 
-  // Macros can go here. Most will go into the opmodes.
+  // Macros can go here. Most will be used in the opmodes.
 }
 
 

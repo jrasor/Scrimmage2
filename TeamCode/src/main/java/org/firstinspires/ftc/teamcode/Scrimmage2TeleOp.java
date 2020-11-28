@@ -84,7 +84,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
  */
 
 
-@TeleOp(name="Scrimmage 2 Teleop", group ="Pullbot")
+@TeleOp(name="Scrimmage 2 Teleop", group ="Competition")
 //@Disabled
 public class Scrimmage2TeleOp extends LinearOpMode {
 
@@ -272,7 +272,9 @@ public class Scrimmage2TeleOp extends LinearOpMode {
 
         targetsUltimateGoal.activate();
         while (!isStopRequested()) {
-            robot.simpleDrive();
+            //robot.simpleDrive();
+            robot.tankDrive();
+            robot.enableNudge();
             // check all the trackable targets to see which one (if any) is visible.
             targetVisible = false;
             for (VuforiaTrackable trackable : allTrackables) {

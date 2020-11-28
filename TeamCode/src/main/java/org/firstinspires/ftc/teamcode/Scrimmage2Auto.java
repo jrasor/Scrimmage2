@@ -41,7 +41,7 @@ import java.util.Locale;
  * o C case: taller rectangle, ratio 1-2. Go for Zone C.
  */
 
-@Autonomous(name = "Scrimmage2 Auto", group = "Vision test")
+@Autonomous(name = "Scrimmage2 Auto", group = "Competition")
 //@Disabled
 public class Scrimmage2Auto extends LinearOpMode {
 
