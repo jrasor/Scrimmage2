@@ -96,6 +96,7 @@ import static org.firstinspires.ftc.teamcode.Pullbot.RingOrientationAnalysisPipe
  *          GenericFTCRobot is correctly done. 11/16 It's not.
  * v 2.0  11/23/20 and later: Rebuilt from FtcRobotController, external
  *        samples, and pieces of failed FtcRobotController60.
+ * v 2.1  11/28/20: added nudge methods and stick tempering.
  */
 
 public class Pullbot extends GenericFTCRobot {
@@ -590,7 +591,7 @@ public class Pullbot extends GenericFTCRobot {
   public void simpleDrive() {
     //  One stick for fore-and-aft, one for turns.
     double drive = currentOpMode.gamepad1.left_stick_y;
-    double turn  =  -currentOpMode.gamepad1.right_stick_x;
+    double turn  = currentOpMode.gamepad1.right_stick_x;
 
     //drive    = Range.clip(drive + turn, -1.0, 1.0) ;
     //turn   = Range.clip(drive - turn, -1.0, 1.0) ;
