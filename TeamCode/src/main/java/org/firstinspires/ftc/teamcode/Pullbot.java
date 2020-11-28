@@ -379,6 +379,36 @@ public class Pullbot extends GenericFTCRobot {
     rightDrive.setZeroPowerBehavior(someBehavior);
   }
 
+  public void moveMotor (DcMotor motor, double speed, double inches) {
+    int newTarget;
+
+    //  Discard current encoder positions.
+    setDriveStopBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    setDriveRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+    // Determine new target position, and pass to motor controller.
+    // Negative target because Pullbot motors pull, not push.
+    newTarget = (int) (-inches * COUNTS_PER_INCH);
+    motor.setTargetPosition(newTarget);
+
+    // Turn On RUN_TO_POSITION
+    setDriveRunMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+    // Go!
+    motor.setPower(Math.abs(speed));
+
+    // keep looping while we are still active, and both motors are running.
+    while (motor.isBusy()) {
+      // Wait until motor is done before doing anything else.
+    }
+    // Clean up, prepare for next segment.
+    motor.setPower(0);
+
+    // Turn off RUN_TO_POSITION
+    leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+  }
+
   public void encoderDrive(double leftSpeed, double rightSpeed,
                            double leftInches, double rightInches) {
     int newLeftTarget;
@@ -414,6 +444,7 @@ public class Pullbot extends GenericFTCRobot {
     leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
   }
+
   ElapsedTime runtime = new ElapsedTime();
 
   // Sigmoid profile for change of speed on a single motor. Todo: test.
@@ -529,17 +560,22 @@ public class Pullbot extends GenericFTCRobot {
   /*                      Command layer.                    */
   //Human driver issues commands with gamepad.
   public void enableNudge () {
+    // Gamepad mapping is similar to tank drive.
     if (currentOpMode.gamepad1.left_trigger > 0){
       // nudge left wheel forward a little
+      moveMotor(leftDrive, NUDGE_SPEED, NUDGE_INCHES);
     }
     if (currentOpMode.gamepad1.right_trigger > 0){
       // nudge right wheel forward a little
+      moveMotor(rightDrive, NUDGE_SPEED, NUDGE_INCHES);
     }
     if (currentOpMode.gamepad1.left_bumper){
       // nudge left wheel back a little
+      moveMotor(leftDrive, NUDGE_SPEED, -NUDGE_INCHES);
     }
-    if (currentOpMode.gamepad1.left_bumper){
+    if (currentOpMode.gamepad1.right_bumper){
       // nudge right wheel back a little
+      moveMotor(rightDrive, NUDGE_SPEED, -NUDGE_INCHES);
     }
   }
 
