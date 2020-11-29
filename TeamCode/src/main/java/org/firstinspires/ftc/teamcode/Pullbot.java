@@ -144,6 +144,8 @@ public class Pullbot extends GenericFTCRobot {
   public ColorSensor colorSensor;
   public static VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
   /* local OpMode members. */
+
+  // Initialization.
   HardwareMap hwMap = null;
   private LinearOpMode currentOpMode;
   private ElapsedTime period = new ElapsedTime();
@@ -154,7 +156,6 @@ public class Pullbot extends GenericFTCRobot {
   }
 
   public Pullbot(LinearOpMode linearOpMode) {
-    //super (linearOpMode);
     currentOpMode = linearOpMode;
   }
 
@@ -218,9 +219,9 @@ public class Pullbot extends GenericFTCRobot {
     static final Scalar GREEN = new Scalar(0, 255, 0);
     static final Scalar BLUE = new Scalar(0, 0, 255);
     //    Threshold values.
-    static final int CB_CHAN_MASK_THRESHOLD = 110; // Todo: find threshold
-    // for  Blue Wobble Goal mast. A later Pullbot may be able to look for
-    // one and grab it.
+    static final int CB_CHAN_MASK_THRESHOLD = 110;
+    // Todo: find threshold for  Blue Wobble Goal mast. A later Pullbot may be
+    //  able to look for one and grab it.
     static final int CONTOUR_LINE_THICKNESS = 2;
     static final int CB_CHAN_IDX = 2;
     //    Our working image buffers.
@@ -288,8 +289,7 @@ public class Pullbot extends GenericFTCRobot {
       // We do draw the contours we find, but not to the main input buffer.
       input.copyTo(contoursOnPlainImageMat);
       Imgproc.drawContours(contoursOnPlainImageMat, contoursList, -1,
-          BLUE,
-          CONTOUR_LINE_THICKNESS, 8);
+          BLUE, CONTOUR_LINE_THICKNESS, 8);
 
       return contoursList;
     }
@@ -298,7 +298,6 @@ public class Pullbot extends GenericFTCRobot {
       //   Noise reduction.
       Imgproc.erode(input, output, erodeElement);
       Imgproc.erode(output, output, erodeElement);
-
       Imgproc.dilate(output, output, dilateElement);
       Imgproc.dilate(output, output, dilateElement);
     }
@@ -320,14 +319,12 @@ public class Pullbot extends GenericFTCRobot {
       analyzedRing.top = rotatedRectFitToContour.boundingRect().y;
       analyzedRing.left = rotatedRectFitToContour.boundingRect().x;
       analyzedRing.height = rotatedRectFitToContour.boundingRect().height;
+      //   Throw out "Rings" not in proper position.
       if (analyzedRing.top < tooHigh) isMaybeRing = false;
       if (analyzedRing.left > tooFarRight) isMaybeRing = false;
       if (analyzedRing.width > tooWide) isMaybeRing = false;
       if (analyzedRing.height > tooTall) isMaybeRing = false;
-      //if (rotatedRectFitToContour.size.width > tooWide) isMaybeRing = false;
-      // int top = rotatedRectFitToContour.boundingRect().y;
-      //int right = rotatedRectFitToContour.boundingRect().x;
-      // TODO: consolidate this with filter code in CountRings.
+      // TODO: consolidate these with filter code in CountRings.
       if (isMaybeRing) {
         internalRingList.add(analyzedRing);
         // The angle OpenCV gives us can be ambiguous, so look at the shape of
@@ -412,6 +409,7 @@ public class Pullbot extends GenericFTCRobot {
 
   public void encoderDrive(double leftSpeed, double rightSpeed,
                            double leftInches, double rightInches) {
+    // Todo: can two calls to moveMotor work here?
     int newLeftTarget;
     int newRightTarget;
 
@@ -441,7 +439,8 @@ public class Pullbot extends GenericFTCRobot {
     leftDrive.setPower(0);
     rightDrive.setPower(0);
 
-    // Turn off RUN_TO_POSITION
+    // Turn off RUN_TO_POSITION.
+    // Todo: is this right? Does not agree with comment.
     leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
   }
@@ -513,7 +512,6 @@ public class Pullbot extends GenericFTCRobot {
     double rightSpeed = speed * turnAdjustRight;
 
     encoderDrive(leftSpeed, rightSpeed, leftArc, rightArc);
-    // clean up
   }
 
   //    Wrapper for turnAngleRadius
@@ -523,8 +521,10 @@ public class Pullbot extends GenericFTCRobot {
     turnAngleRadiusDrive(speed, targetAngle, radius);
   }
 
+  // TurnAngleArc not implemented.
+
   //  Begin a left turn at speed, sharpness of turn decided by ratio.
-  // TODO Test on Meet 3 build.
+  // TODO Test on Scrimmage2 build.
   //    1:  go straight.
   //    0:  turn axis is left wheel.
   //    -1: turn axis is between drive wheels. Robot turns on own axis.
@@ -559,7 +559,7 @@ public class Pullbot extends GenericFTCRobot {
 
 
   /*                      Command layer.                    */
-  //Human driver issues commands with gamepad.
+  // Human driver issues commands with gamepad.
   public void enableNudge () {
     // Gamepad mapping is similar to tank drive.
     if (currentOpMode.gamepad1.left_trigger > 0){
