@@ -38,11 +38,14 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import android.hardware.Sensor;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -84,6 +87,7 @@ import static org.firstinspires.ftc.teamcode.Pullbot.RingOrientationAnalysisPipe
  * Motor channel:  Left front  drive motor:        "motor0"
  * Motor channel:  Right front drive motor:        "motor1"
  * Servo channel:                                  "arm"
+ * Color sensor:                                   "colorSensor"
  */
 
 /* Version history
@@ -97,6 +101,7 @@ import static org.firstinspires.ftc.teamcode.Pullbot.RingOrientationAnalysisPipe
  * v 2.0  11/23/20 and later: Rebuilt from FtcRobotController, external
  *        samples, and pieces of failed FtcRobotController60.
  * v 2.1  11/28/20: added nudge methods and stick tempering.
+ * v 2.2  12/1/20: improved nudging and simple driving.
  */
 
 public class Pullbot extends GenericFTCRobot {
@@ -111,10 +116,11 @@ public class Pullbot extends GenericFTCRobot {
   public static final int tooWide = 70;
   public static final int tooTall = 50;
 
+
   // Field related constants.
   public static final float mmPerInch = 25.4f; // use mm dimensions
   // Constants for perimeter Vuforia navigation targets
-  // Field outside: 12'. Inside: 1" shorter than that, each dimension.
+  // Field outside: 12'. Inside: 1" shorter than that, each Wall.
   public static final float fullField = 142 * mmPerInch;
   public static final float halfField = fullField / 2;
   public static final float quarterField = fullField / 4;
@@ -154,7 +160,6 @@ public class Pullbot extends GenericFTCRobot {
   public Pullbot() {
     super();
   }
-
   public Pullbot(LinearOpMode linearOpMode) {
     currentOpMode = linearOpMode;
   }
@@ -354,6 +359,60 @@ public class Pullbot extends GenericFTCRobot {
       int width;
     }
   }
+  int CountRings (int viewID){
+    int ringsDetected = 0;
+    init(); // prolly don't have to initialize everything.
+
+    phoneCam =
+        OpenCvCameraFactory.getInstance().createInternalCamera2(OpenCvInternalCamera2.CameraDirection.BACK, viewID);
+
+    // Open async and start streaming inside opened callback
+    phoneCam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+      @Override
+      public void onOpened() {
+        phoneCam.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_LEFT);
+        pipeline = new RingOrientationAnalysisPipeline();
+        phoneCam.setPipeline(pipeline);
+      }
+    });
+
+    sleep(20);
+    if (pipeline == null) return -2;
+    // Report detected rectangles to telemetry. There should be only 1.
+    // Todo: check this assertion.
+    ArrayList<RingOrientationAnalysisPipeline.AnalyzedRing> rings =
+        pipeline.getDetectedRings();
+    if (rings.isEmpty()) {
+      // ringsDetected will be left at zero.
+      currentOpMode.telemetry.addLine("No rings detected.");
+    } else {
+      for (RingOrientationAnalysisPipeline.AnalyzedRing ring :
+          rings) {
+        if (ring.left > 100) continue;
+        if (ring.top < 0) continue;
+        if (ring.width > 100) continue;
+        if (ring.height > 60 ) continue;
+        currentOpMode.telemetry.addLine(String.format(Locale.US,
+            "Ring aspect ratio = %.2f.",
+            ring.aspectRatio));
+        currentOpMode.telemetry.addLine(String.format(Locale.US,
+            "Ring top = %2d  left = %2d.",
+            ring.top, ring.left));
+        currentOpMode.telemetry.addLine(String.format(Locale.US,
+            "Ring width = %2d  height=%2d.",
+            ring.width, ring.height));
+        if (ring.aspectRatio > 1 && ring.aspectRatio <= 2) ringsDetected = 4;
+        if (ring.aspectRatio > 2 && ring.aspectRatio <= 4) ringsDetected = 1;
+        currentOpMode.telemetry.addLine(String.format(Locale.US,
+            "Rings detected = %2d.",
+            ringsDetected));
+      }
+    }
+    currentOpMode.telemetry.update();
+
+    return ringsDetected;
+  }
+
   /*
    *										Drive Train methods
    */
@@ -381,8 +440,8 @@ public class Pullbot extends GenericFTCRobot {
     int newTarget;
 
     //  Discard current encoder positions.
-    setDriveStopBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-    setDriveRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    //setDriveStopBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    //setDriveRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
     // Determine new target position, and pass to motor controller.
     // Negative target because Pullbot motors pull, not push.
@@ -403,8 +462,8 @@ public class Pullbot extends GenericFTCRobot {
     motor.setPower(0);
 
     // Turn off RUN_TO_POSITION
-    leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    //leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    //rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
   }
 
   public void encoderDrive(double leftSpeed, double rightSpeed,
@@ -564,19 +623,21 @@ public class Pullbot extends GenericFTCRobot {
     // Gamepad mapping is similar to tank drive.
     if (currentOpMode.gamepad1.left_trigger > 0){
       // nudge left wheel forward a little
-      moveMotor(leftDrive, NUDGE_SPEED, NUDGE_INCHES);
+      //moveMotor(leftDrive, NUDGE_SPEED, NUDGE_INCHES);
+      leftDrive.setPower (-NUDGE_SPEED);
     }
     if (currentOpMode.gamepad1.right_trigger > 0){
       // nudge right wheel forward a little
-      moveMotor(rightDrive, NUDGE_SPEED, NUDGE_INCHES);
+
+      rightDrive.setPower(-NUDGE_SPEED);
     }
     if (currentOpMode.gamepad1.left_bumper){
       // nudge left wheel back a little
-      moveMotor(leftDrive, NUDGE_SPEED, -NUDGE_INCHES);
+      leftDrive.setPower (NUDGE_SPEED);
     }
     if (currentOpMode.gamepad1.right_bumper){
       // nudge right wheel back a little
-      moveMotor(rightDrive, NUDGE_SPEED, -NUDGE_INCHES);
+      rightDrive.setPower (NUDGE_SPEED);
     }
   }
 
@@ -589,14 +650,12 @@ public class Pullbot extends GenericFTCRobot {
   }
 
   public void simpleDrive() {
-    //  One stick for fore-and-aft, one for turns.
+    //  Left stick for fore-and-aft, right one for turns.
     double drive = currentOpMode.gamepad1.left_stick_y;
-    double turn  = currentOpMode.gamepad1.right_stick_x;
+    double turn  = currentOpMode.gamepad1.right_stick_x/3.0;
     leftDrive.setPower(temperedControl(drive - turn));
     rightDrive.setPower(temperedControl(drive + turn));
   }
 
   // Macros can go here. Most will be used in the opmodes.
 }
-
-
