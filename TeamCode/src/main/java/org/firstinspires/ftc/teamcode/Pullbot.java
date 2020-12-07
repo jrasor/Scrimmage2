@@ -102,6 +102,7 @@ import static org.firstinspires.ftc.teamcode.Pullbot.RingOrientationAnalysisPipe
  *        samples, and pieces of failed FtcRobotController60.
  * v 2.1  11/28/20: added nudge methods and stick tempering.
  * v 2.2  12/1/20: improved nudging and simple driving.
+ *        12/2/20 Feature freeze for UGScrimmage2.
  */
 
 public class Pullbot extends GenericFTCRobot {
@@ -652,7 +653,7 @@ public class Pullbot extends GenericFTCRobot {
   public void simpleDrive() {
     //  Left stick for fore-and-aft, right one for turns.
     double drive = currentOpMode.gamepad1.left_stick_y;
-    double turn  = currentOpMode.gamepad1.right_stick_x/3.0;
+    double turn  = currentOpMode.gamepad1.right_stick_x/2.0;
     leftDrive.setPower(temperedControl(drive - turn));
     rightDrive.setPower(temperedControl(drive + turn));
   }
