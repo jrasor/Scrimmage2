@@ -275,8 +275,8 @@ public class Scrimmage2TeleOp extends LinearOpMode {
         targetsUltimateGoal.activate();
 
         while (!isStopRequested()) {
-            robot.simpleDrive();
-            //robot.tankDrive();
+            //robot.simpleDrive();
+            robot.tankDrive();
             robot.enableNudge();
             // check all the trackable targets to see which one (if any) is visible.
             targetVisible = false;

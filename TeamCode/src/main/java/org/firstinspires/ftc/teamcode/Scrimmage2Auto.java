@@ -52,17 +52,17 @@ public class Scrimmage2Auto extends LinearOpMode {
   boolean doPaths = true;
 
   private void doPathA (){
-    robot.turnArcRadiusDrive (turnSpeed, 84.0, 80.0);
+    robot.turnArcRadiusDrive (turnSpeed, 80.0, 74.0);
   }
 
   private void doPathB (){
-    robot.turnArcRadiusDrive (turnSpeed, 96.0, 240.0);
-    robot.turnArcRadiusDrive (turnSpeed, -20.0, 240.0);
+    robot.turnArcRadiusDrive (turnSpeed, 90.0, 260.0);
+    robot.turnArcRadiusDrive (turnSpeed, -12.0, 260.0);
   }
 
   private void doPathC (){
-    robot.turnArcRadiusDrive (turnSpeed, 123.0, 157.0);
-    robot.turnArcRadiusDrive (turnSpeed, -46.0, 157.0);
+    robot.turnArcRadiusDrive (turnSpeed, 120.0, 180.0); // was 123, 157
+    robot.turnArcRadiusDrive (turnSpeed, -42.0, 180.0); // was -46, 157
   }
 
   @Override
